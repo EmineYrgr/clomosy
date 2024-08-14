@@ -1,2 +1,2 @@
-# clomosy
+# Clomosy
 Gym Membership Tracking Application
