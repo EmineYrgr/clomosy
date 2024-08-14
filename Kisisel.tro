@@ -1,0 +1,255 @@
+Var   
+  Form1:TClForm;
+  RightLyt : TclLayout;
+  PListView : TClProListView;
+  panel1 : TClProListViewDesignerPanel;
+  ShowBtn,DeleteBtn,UpdateBtn,AlterBtn : TClProButton;
+  AdSoyad,Boy,Kilo : TClProLabel;
+  AdSoyadEdit,BoyEdit,KiloEdit,DogumTarihiEdit : TclProEdit;
+
+Void ClearEdtText
+{
+  AdSoyadEdit.Text='';
+  BoyEdit.Text='';
+  KiloEdit.Text='';
+  DogumTarihiEdit.Text='';
+
+}
+Void SetupSqlConnection
+{
+  Clomosy.DBSQLServerConnect('SQL Server','.\SQLEXPRESS','ss','ss','Clomosy',1433); //Clomosy.DBSQLServerConnect('SQL Server','192.168.5.23','ss','ATIKER','Okul',1433);
+}
+
+Void DataShow
+Var
+  getListQuery : TClSqlQuery;
+{
+  getListQuery = TClSqlQuery.Create(nil);
+  try
+    getListQuery.Connection = Clomosy.DBSQLServerConnection;
+    getListQuery.SQL.Text ='SELECT 
+    ''Ad Soyad: '' + AdSoyad as AdSoyad,
+    ''Boy: '' + CAST(Boy as VARCHAR(10)) as Boy,
+    ''Kilo: '' + CAST(Kilo as VARCHAR(10)) as Kilo 
+    FROM kayit';
+
+    getListQuery.ExecSql;
+    if (getListQuery.Found)
+    {
+    PListView.clLoadProListViewDataFromDataset(getListQuery);
+    }
+    else
+    {
+    PListView.Clearlist;
+    }
+  finally
+    getListQuery.Free;
+  }
+}
+
+Void DataInsert
+var
+  insertListQuery : TClSqlQuery;
+{
+  if ((AdSoyadEdit.Text == '')||(BoyEdit.Text == '')||(KiloEdit.Text == ''))
+  {
+    ShowMessage('Kutucukları Doldurunuz.');
+  }
+  else
+  {
+    insertListQuery = TClSqlQuery.Create(nil);
+    try
+      insertListQuery.Connection = Clomosy.DBSQLServerConnection;
+      insertListQuery.SQL.Text ='Insert Into kayit(AdSoyad,Boy,Kilo)Values('+QuotedStr(AdSoyadEdit.Text)+','
+      +BoyEdit.Text+','+KiloEdit.Text+')';
+      insertListQuery.ExecSql;
+      DataShow;
+      ClearEdtText;
+
+    finally
+        insertListQuery.Free;
+    }
+  }
+}
+
+Void onItemClicked
+{
+  ShowMessage(clGetStringAfter(PListView.clSelectedItemData(clCaption),': '));
+  AdSoyadEdit.Text=clGetStringAfter(PListView.clSelectedItemData(clCaption),': ');
+  BoyEdit.Text=clGetStringAfter(PListView.clSelectedItemData(clText),': ');
+  KiloEdit.Text=clGetStringAfter(PListView.clSelectedItemData(clText1),': ');
+}
+
+Void DataDelete
+var
+  deleteListQuery : TClSqlQuery;
+{
+  deleteListQuery = TClSqlQuery.Create(nil);
+  try
+    deleteListQuery.Connection = Clomosy.DBSQLServerConnection;
+    deleteListQuery.SQL.Text = 'Delete From kayit Where AdSoyad = '+QuotedStr(AdSoyadEdit.Text);
+    deleteListQuery.ExecSql;
+    DataShow;
+    ClearEdtText;
+  finally
+    deleteListQuery.Free;
+  }
+}
+
+Void DataUpdate
+var
+  updateListQuery : TClSqlQuery;
+{
+  if ((AdSoyadEdit.Text == '')||(BoyEdit.Text == '')||(KiloEdit.Text == '')||(DogumTarihiEdit.Text == ''))
+  {
+    ShowMessage('Kutucukları Doldurunuz.');
+  }
+  else
+  {
+    updateListQuery = TClSqlQuery.Create(nil);
+    try
+      updateListQuery.Connection = Clomosy.DBSQLServerConnection;
+      updateListQuery.SQL.Text = 'Update kayit Set AdSoyad ='+QuotedStr(AdSoyadEdit.Text)+',Boy ='+BoyEdit.Text+
+      ',Kilo ='+KiloEdit.Text+'Where AdSoyad ='+QuotedStr(AdSoyadEdit.Text);
+      updateListQuery.ExecSql;
+      DataShow;
+      ClearEdtText;
+    finally
+      updateListQuery.Free;
+    }
+  }
+}
+
+{
+  Form1 =TClForm.Create(Self);
+  
+  PListView = Form1.AddNewProListView(Form1,'PListView');
+  PListView.Align = alLeft;
+  PListView.Width = Form1.clWidth/2;
+  PListView.Margins.Right = 10;
+  PListView.Margins.Bottom = 10;
+  PListView.Margins.Left = 10;
+  PListView.clProSettings.ViewType = lvWaterFall;
+  PListView.clProSettings.IsRound = True;
+  PListView.clProSettings.IsFill = True;
+  PListView.clProSettings.ColCount = 1;
+  PListView.clProSettings.ItemHeight = 150;
+  PListView.clProSettings.ItemSpace = 5;
+  PListView.clProSettings.BorderColor = clAlphaColor.clHexToColor('#20B2AA');
+  PListView.clProSettings.BorderWidth = 1;
+  PListView.clProSettings.RoundWidth = 3;
+  PListView.clProSettings.RoundHeight = 3;
+  PListView.SetclProSettings(PListView.clProSettings);
+  
+  panel1 = Form1.AddNewProListViewDesignerPanel(PListView,'panel1'); 
+  panel1.Align = alCenter;
+  panel1.Height = 80;
+  panel1.clProSettings.IsRound = True;
+  panel1.clProSettings.IsFill = True;
+  panel1.clProSettings.ItemHeight = 150;
+  panel1.clProSettings.BackgroundColor = clAlphaColor.clHexToColor('#ffe5ec');
+  panel1.clProSettings.BorderColor = clAlphaColor.clHexToColor('#ffe5ec');
+  panel1.clProSettings.BorderWidth = 2;
+  panel1.clProSettings.RoundWidth = 10;
+  panel1.clProSettings.RoundHeight = 10;
+  panel1.SetclProSettings(panel1.clProSettings);
+  PListView.SetDesignerPanel(panel1);
+  Form1.AddNewEvent(PListView,tbeOnItemClick,'onItemClicked');
+  
+  AdSoyad = Form1.AddNewProLabel(panel1,'AdSoyad','');
+  AdSoyad.Align = alMostTop;
+  AdSoyad.Margins.Top = 5;
+  AdSoyad.Height = panel1.Height/6;
+  AdSoyad.clProSettings.FontColor = clAlphaColor.clHexToColor('#fb6f92');
+  AdSoyad.clProSettings.FontSize = 15;
+  AdSoyad.clProSettings.TextSettings.Font.Style = [fsBold];
+  AdSoyad.clProSettings.FontVertAlign = palcenter;
+  AdSoyad.clProSettings.FontHorzAlign = palLeading;
+  AdSoyad.clProSettings.RoundWidth = 10;
+  AdSoyad.clProSettings.RoundHeight = 10;
+  AdSoyad.SetclProSettings(AdSoyad.clProSettings);
+  panel1.AddPanelObject(AdSoyad,clCaption);
+  
+  Boy = Form1.AddNewProLabel(panel1,'Boy','');
+  Boy.Align = alMostTop;
+  Boy.Margins.Top = 5;
+  Boy.Height = panel1.Height/5;
+  Boy.SetclProSettings(AdSoyad.clProSettings);
+  panel1.AddPanelObject(Boy,clText);
+  
+  Kilo = Form1.AddNewProLabel(panel1,'Kilo','');
+  Kilo.Align = alMostTop;
+  Kilo.Margins.Top = 5;
+  Kilo.Height = panel1.Height/5;
+  Kilo.SetclProSettings(AdSoyad.clProSettings);
+  panel1.AddPanelObject(Kilo,clText1);
+  
+  SetupSqlConnection;
+  DataShow;
+  
+  RightLyt = Form1.AddNewLayout(Form1,'RightLyt');
+  RightLyt.Align=alRight;
+  RightLyt.Margins.Right = 20; 
+  RightLyt.Width = (Form1.clWidth/2)-50;
+  
+  ShowBtn = Form1.AddNewProButton(RightLyt,'ShowBtn','Verileri Göster');
+  ShowBtn.Align = alMostTop;
+  ShowBtn.Height = RightLyt.Height/11-10;
+  ShowBtn.clProSettings.IsFill = True;
+  ShowBtn.clProSettings.IsRound = True;
+  ShowBtn.clProSettings.BackgroundColor = clAlphaColor.clHexToColor('#ffe5ec');
+  ShowBtn.clProSettings.FontColor = clAlphaColor.clHexToColor('#fb6f92');
+  ShowBtn.clProSettings.FontSize = 15;
+  ShowBtn.clProSettings.RoundWidth = 10;
+  ShowBtn.clProSettings.RoundHeight = 10;
+  ShowBtn.clProSettings.FontVertAlign = palcenter;
+  ShowBtn.clProSettings.FontHorzAlign = palCenter;
+  ShowBtn.clProSettings.TextSettings.Font.Style = [fsBold];
+  ShowBtn.SetclProSettings(ShowBtn.clProSettings);
+  Form1.AddNewEvent(ShowBtn,tbeOnClick,'DataShow');
+  
+  DeleteBtn = Form1.AddNewProButton(RightLyt,'DeleteBtn','Veriyi Sil');
+  DeleteBtn.Align = alMostTop;
+  DeleteBtn.Height = RightLyt.Height/11-10;
+  DeleteBtn.Margins.Top = 10;
+  DeleteBtn.SetclProSettings(ShowBtn.clProSettings);
+  Form1.AddNewEvent(DeleteBtn,tbeOnClick,'DataDelete');
+  
+  AdSoyadEdit = Form1.AddNewProEdit(RightLyt,'AdSoyadEdit','Ad Soyad Giriniz');
+  AdSoyadEdit.Align = alMostTop;
+  AdSoyadEdit.Height = RightLyt.Height/11-10;
+  AdSoyadEdit.Margins.Top = 10;
+  AdSoyadEdit.SetclProSettings(ShowBtn.clProSettings);
+  
+  BoyEdit = Form1.AddNewProEdit(RightLyt,'BoyEdit','Boy Giriniz');
+  BoyEdit.Align = alMostTop;
+  BoyEdit.Height = RightLyt.Height/11-10;
+  BoyEdit.Margins.Top = 10;
+  BoyEdit.SetclProSettings(ShowBtn.clProSettings);
+
+  BoyEdit.MaxLength=3;
+  
+  KiloEdit = Form1.AddNewProEdit(RightLyt,'KiloEdit','Kilo Giriniz');
+  KiloEdit.Align = alMostTop;
+  KiloEdit.Height = RightLyt.Height/11-10;
+  KiloEdit.Margins.Top = 10;
+  KiloEdit.SetclProSettings(ShowBtn.clProSettings);
+
+  KiloEdit.MaxLength=15;
+ 
+  AlterBtn = Form1.AddNewProButton(RightLyt,'AlterBtn','Üye Ekle');
+  AlterBtn.Align = alMostTop;
+  AlterBtn.Height = RightLyt.Height/11-10;
+  AlterBtn.Margins.Top = 10;
+  AlterBtn.SetclProSettings(ShowBtn.clProSettings);
+  Form1.AddNewEvent(AlterBtn,tbeOnClick,'DataInsert');
+  
+  UpdateBtn = Form1.AddNewProButton(RightLyt,'UpdateBtn','Üyeleri Güncelle');
+  UpdateBtn.Align = alMostTop;
+  UpdateBtn.Height = RightLyt.Height/11-10;
+  UpdateBtn.Margins.Top = 10;
+  UpdateBtn.SetclProSettings(ShowBtn.clProSettings);
+  Form1.AddNewEvent(UpdateBtn,tbeOnClick,'DataUpdate');
+  
+  Form1.Run;
+}

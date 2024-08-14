@@ -1,0 +1,134 @@
+var
+Form1:TclForm;
+Panel1 : TclPanel;
+ProButton1, ProButton2, BtnKisisel: TclProButton;
+proLabel1, proLabel2: TClProLabel;
+saglikliBeslenImg, meyvesuImg  : TclImage;
+Layout1 : TclLayout;
+tarih  : TClProDateEdit;
+
+GetStartTimerBtn,GetStopTimerBtn : TClButton;
+lblTimer,GirisYapTitle : TclLabel;
+getTimer: TClTimer;
+duration, sn ,ss : Integer;
+
+void sagliklibeslenUnit
+ {
+Clomosy.RunUnit('sagliklibeslen');
+}
+ void KisiselUnit
+ {
+   Clomosy.RunUnit('Kisisel');
+ }
+ void AnaSayfaUnit
+{
+Clomosy.RunUnit('AnaSayfa');
+}
+void takvimUnit
+{
+Clomosy.RunUnit('takvim');
+}
+void BtnStartClick;
+{
+  getTimer.Enabled = True;
+}
+void BtnStopClick;
+{
+  getTimer.Enabled = False;
+}
+void timerShow;
+{
+  Inc(duration);
+  sn = (duration div 10); //bölümün tam kısmını alır
+  ss = (duration mod 10); //kalanı alır
+  lblTimer.Caption = IntToStr(sn)+'.'+IntToStr(ss);
+}
+{
+  Form1 = TclForm.Create(Self);
+    
+  duration = 0;
+  Form1 = TclForm.Create(Self);
+  getTimer= Form1.AddNewTimer(Form1,'getTimer',100);
+  Form1.AddNewEvent(getTimer,tbeOnTimer,'timerShow');
+  
+ GetStartTimerBtn = Form1.AddNewButton(Form1,'GetStartTimerBtn','Başlat');
+  GetStartTimerBtn.Margins.Right = 300;
+  Form1.AddNewEvent(GetStartTimerBtn,tbeOnClick,'BtnStartClick');
+  
+ GetStopTimerBtn = Form1.AddNewButton(Form1,'GetStopTimerBtn','Durdur');
+  GetStopTimerBtn.Margins.Left = 100;
+  Form1.AddNewEvent(GetStopTimerBtn,tbeOnClick,'BtnStopClick');
+  
+  lblTimer= Form1.AddNewLabel(Form1,'lblTimer','');
+  lblTimer.StyledSettings = ssFamily;
+  lblTimer.TextSettings.Font.Size=20;
+  lblTimer.Align = alCenter;
+  
+TclButton(Form1.clFindComponent('BtnFormMenu')).Visible = True;
+TclButton(Form1.clFindComponent('BtnGoBack')).Visible = True;
+Form1.clSetCaption('SPOR SALONU ABONE TAKİP UYGULAMASI');
+
+Layout1 = Form1.AddNewLayout(Form1,'Layout1');
+
+Panel1=Form1.AddNewPanel(Form1,'Panel1','');
+Panel1.Height = 125;
+Panel1.Width = 200;
+Panel1.Align=alBottom;
+
+ProButton1 = Form1.AddNewProButton(Panel1,'ProButton1','');
+ProButton1.Align = 50;
+ProButton1.Height = 125;
+ProButton1.Width = 125;
+ProButton1.Align = alLeft;
+clComponent.SetupComponent(ProButton1,'{
+"TextColor":"#8338ec","RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(ProButton1,'https://r.resimlink.com/IBZMCybm.png');
+
+ProButton2 = Form1.AddNewProButton(Panel1,'ProButton2','');
+ProButton2.Height = 125;
+ProButton2.Width = 125;
+ProButton2.Align = alCenter;
+clComponent.SetupComponent(ProButton2,'{
+"TextColor":"#8338ec",
+"RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(ProButton2,'https://r.resimlink.com/5anqmZ36.png');
+Form1.AddNewEvent(ProButton2,tbeOnClick,'takvimUnit');
+
+BtnKisisel = Form1.AddNewProButton(Panel1,'BtnKisisel','');
+BtnKisisel.Align = 50;
+BtnKisisel.Height = 125;
+BtnKisisel.Width = 125;
+BtnKisisel.Align = alRight;
+clComponent.SetupComponent(BtnKisisel,'{"TextColor":"#8338ec",
+"RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(BtnKisisel,'https://r.resimlink.com/uVfgY-vta4M.png');
+Form1.AddNewEvent(BtnKisisel,tbeOnClick,'KisiselUnit')
+
+proLabel1 = Form1.AddNewProLabel(Layout1,'proLabel1','Takvim');
+clComponent.SetupComponent(proLabel1,'{"Align" : "alCenter",
+"Width" :300, "Height":50,
+"TextColor":"#03071e","TextSize":14,"TextVerticalAlign":"top",
+"TextHorizontalAlign":"alCenter","TextBold":"yes"}');
+ 
+ Tarih = Form1.AddNewProDateEdit(Form1,'Tarih');
+ Tarih.Align=alTop;
+ clComponent.SetupComponent(Tarih, '{"Align" : "alCenter",
+  "TextColor":"#0d0c0c","TextSize":24,
+  "Width":200,"Height":200,
+  "RoundHeight":10,"RoundWidth":10,
+  "BorderColor":"#323d8c","BorderWidth":2, 
+  "BackgroundColor":"#a6ade3"}');
+/*  Tarih.calendar.Visible = True;
+    Tarih.ShowCalendar;  */
+
+  GirisYapTitle= Form1.AddNewLabel(Form1,'GirisYapTitle','Egzersiz süresini görmek için zamanlayıcı başlatabilirsin. ');
+  GirisYapTitle.Margins.Top=250;
+  GirisYapTitle.Width=400;
+  GirisYapTitle.StyledSettings = ssFamily;
+  GirisYapTitle.TextSettings.Font.Size= 15;
+
+
+
+Form1.Run;
+
+}

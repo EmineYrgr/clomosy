@@ -1,0 +1,170 @@
+Var  
+  Form1 : TclForm;
+  lblTitle, lblList , lblList1, lblList2,lblList3, lblList4,lblList5  : TClLabel;
+  EditDTarih,EditAdSoyad, EditKilo,EditDTarih3,EditBoy,EditSifre: TclEdit;
+  lytList,lytList1, lytList2, lytList3, lytList4, lytList5 : TClLayout;
+  guideListView : TclListView;
+  kadinCinsiyetRadio,erkekCinsiyetRadio:TCLRadioButton;
+  kayitBtn : TclButton;
+  kayitBtn2 : TClProButton;
+  Panel : TclProPanel;
+  insertQuery : TclSqlQuery;
+
+void InsertToDatabase;
+{
+  try
+  {
+   Clomosy.DBSQLServerQuery.Sql.Text = 'INSERT INTO kayit (AdSoyad, Boy, Kilo, Sifre ) VALUES ('+QuotedStr(EditAdSoyad.Text)+','+QuotedStr(EditBoy.Text)+','+QuotedStr(EditKilo.Text)+','+QuotedStr(EditSifre.Text)+')';
+    Clomosy.DBSQLServerQuery.ExecSql;
+
+    ShowMessage('Veri ekleme başarılı');
+  }
+  except
+  {
+    ShowMessage('Exception class: '+LastExceptionClassName+' Exception Message: ' +LastExceptionMessage);
+  }
+}
+  } 
+
+{
+  Form1=TclForm.Create(Self);
+
+Panel=Form1.AddNewProPanel(Form1,'Panel');
+  clComponent.SetupComponent(Panel,
+  '{"Align" : "Center",
+  "MarginBottom":135,
+  "Width" :350,
+  "Height":450,
+  "RoundHeight":10,
+  "RoundWidth":10,
+  "BorderWidth":5,
+  "BorderColor":"#ffc2d1"}');
+  
+kayitBtn = Form1.AddNewButton(Panel,'kayitBtn','Kayıt Ol');
+  kayitBtn.StyledSettings = ssFamily;
+  kayitBtn.TextSettings.Font.Size = 20;
+  kayitBtn.TextSettings.FontColor = clAlphaColor.clHexToColor('#8a067c');
+  kayitBtn.Height = 50;
+  kayitBtn.Width = 100;
+  kayitBtn.Align = alBottom;
+  kayitBtn.Margins.Left = 50;
+  kayitBtn.Margins.Right = 50;
+  kayitBtn.Margins.Top = 10;
+  kayitBtn.Margins.Bottom = 25;
+  Form1.AddNewEvent(kayitBtn,tbeOnClick,'InsertToDatabase');
+
+lblTitle= Form1.AddNewLabel(Panel,'lblTitle','∼ Kayıt Ol ∼');
+  lblTitle.Align=alMostTop;
+  lblTitle.Height =100;
+  lblTitle.Margins.Left=85;
+  lblTitle.StyledSettings = ssFamily;
+  lblTitle.TextSettings.Font.Size= 32;
+ 
+  lytList5 = Form1.AddNewLayout(Panel,'lytList5');
+  lytList5.Align = alTop;
+  lytList5.Margins.Top = 10;
+  lytList5.Height = 25;
+  lytList5.Width = 340;
+ 
+lblList5 = Form1.AddNewLabel(lytList5,'lblList5','Şifre: :');
+  lblList5.Align = alMostLeft;
+  lblList5.Width = 140;
+  lblList5.Margins.Left = 10;
+ 
+  EditSifre = Form1.AddNewEdit(lytList5,'EditSifre',' Şifre Oluşturun');
+  EditSifre.Align = alLeft;
+  EditSifre.Width = 140;
+ 
+  lytList3 = Form1.AddNewLayout(Panel,'lytList3');
+  lytList3.Align = alTop;
+  lytList3.Margins.Top = 10;
+  lytList3.Height = 50;
+  lytList3.Width = 340;
+ 
+lblList3 = Form1.AddNewLabel(lytList3,'lblList3','Cinsiyet:');
+  lblList3.Align = alMostLeft;
+  lblList3.Width = 140;
+  lblList3.Margins.Left = 10;
+ 
+kadinCinsiyetRadio = Form1.AddNewRadioButton(lytList3, 'kadinCinsiyetRadio' , 'Kadın');
+  kadinCinsiyetRadio.StyledSettings = ssFamily;
+  kadinCinsiyetRadio.TextSettings.Font.Size = 18;
+  kadinCinsiyetRadio.TextSettings.FontColor = clAlphaColor.clHexToColor('#000000');
+  kadinCinsiyetRadio.Height = 30;
+  kadinCinsiyetRadio.align = alLeft;
+  kadinCinsiyetRadio.isChecked = False;
+  
+erkekCinsiyetRadio = Form1.AddNewRadioButton(lytList3, 'erkekCinsiyetRadio' , 'Erkek');
+  erkekCinsiyetRadio.StyledSettings = ssFamily;
+  erkekCinsiyetRadio.TextSettings.Font.Size = 18;
+  erkekCinsiyetRadio.TextSettings.FontColor = clAlphaColor.clHexToColor('#000000');
+  erkekCinsiyetRadio.Height = 30;
+  erkekCinsiyetRadio.align = alTop;
+  erkekCinsiyetRadio.isChecked = False;
+ 
+  lytList = Form1.AddNewLayout(Panel,'lytList');
+  lytList.Align = alTop;
+  lytList.Margins.Top = 10;
+  lytList.Height = 25;
+  lytList.Width = 340;
+ 
+lblList = Form1.AddNewLabel(lytList,'lblList','Doğum Tarihi:');
+  lblList.Align = alMostLeft;
+  lblList.Width = 140;
+  lblList.Margins.Left = 10;
+ 
+  EditDTarih = Form1.AddNewEdit(lytList,'EditDTarih','Gün\Ay\Yıl');
+  EditDTarih.Align = alLeft;
+  EditDTarih.Width = 140;
+
+  lytList2 = Form1.AddNewLayout(Panel,'lytList2');
+  lytList2.Align = alTop;
+  lytList2.Margins.Top = 10;
+  lytList2.Height = 25;
+  lytList2.Width = 340;
+ 
+  lblList2 = Form1.AddNewLabel(lytList2,'lblList2','Kilo:');
+  lblList2.Align = alMostLeft;
+  lblList2.Width = 140;
+  lblList2.Margins.Left = 10;
+ 
+  EditKilo = Form1.AddNewEdit(lytList2,'EditKilo','Kilonuzu Giriniz');
+  EditKilo.Align = alLeft;
+  EditKilo.Width = 140;
+ 
+  lytList4 = Form1.AddNewLayout(Panel,'lytList4');
+  lytList4.Align = alTop;
+  lytList4.Margins.Top = 10;
+  lytList4.Height = 25;
+  lytList4.Width = 340;
+ 
+lblList4 = Form1.AddNewLabel(lytList4,'lblList4','Boy:');
+  lblList4.Align = alMostLeft;
+  lblList4.Width = 140;
+  lblList4.Margins.Left = 10;
+ 
+  EditBoy = Form1.AddNewEdit(lytList4,'EditBoy',' Boyunuzu Giriniz');
+  EditBoy.Align = alLeft;
+  EditBoy.Width = 140;
+ 
+  lytList1 = Form1.AddNewLayout(Panel,'lytList1');
+  lytList1.Align = alTop;
+  lytList1.Margins.Top = 10;
+  lytList1.Height = 25;
+  lytList1.Width = 340;
+ 
+ lblList1 = Form1.AddNewLabel(lytList1,'lblList1','Ad Soyad:');
+  lblList1.Align = alMostLeft;
+  lblList1.Width = 140;
+  lblList1.Margins.Left = 10;
+ 
+  EditAdSoyad = Form1.AddNewEdit(lytList1,'EditAdSoyad',' Ad Soyad Giriniz');
+  EditAdSoyad.Align = alLeft;
+  EditAdSoyad.Width = 140;
+
+insertQuery = TclSqlQuery.Create(nil); 
+Clomosy.DBSQLServerConnect('SQL Server','.\SQLEXPRESS','ss','ss','Clomosy',1433);
+insertQuery.Connection = Clomosy.DBSQLServerConnection;
+
+  Form1.Run;
+}

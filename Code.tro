@@ -1,0 +1,107 @@
+// 225035042 Emine YÜREGİR
+Var
+   Form1 : TclForm;
+   GirisYapTitle, lblList ,layoutList2,layoutList1, adSoyadLabel, sifreLabel : TClLabel;
+   adSoyadEdit,sifreGirEdit : TclEdit;
+   lytList : TClLayout;
+   guideListView : TclListView;
+   girisBtn, kayitBtn : TclButton;
+   Label1: TClProLabel;
+   Panel : TclProPanel;
+
+   Void SetupSqlConnection
+{
+  Clomosy.DBSQLServerConnect('SQL Server','.\SQLEXPRESS','ss','ss','Clomosy',1433); //Clomosy.DBSQLServerConnect('SQL Server','192.168.5.23','sa','ATIKER','Okul',1433);
+}
+void AnaSayfaUnit
+{
+if((adSoyadEdit.text == 'admin') && (sifreGirEdit.text == '123'))
+  Clomosy.RunUnit('AnaSayfa');
+else ShowMessage('ad veya sifre yanlıs');
+}
+void KayitUnit
+{
+Clomosy.RunUnit('Kayit');
+}
+  {
+
+  Form1 = TclForm.Create(Self);
+ 
+  Panel=Form1.AddNewProPanel(Form1,'Panel');
+  clComponent.SetupComponent(Panel,
+  '{"Align" : "Center",
+  "MarginBottom":135,
+  "Width" :350,
+  "Height":450,
+  "RoundHeight":10,
+  "RoundWidth":10,
+  "BorderWidth":5,
+  "BorderColor":"#8a067c"}');
+ 
+  kayitBtn = Form1.AddNewButton(Panel,'kayitBtn','Kayıt Ol');
+  kayitBtn.StyledSettings = ssFamily;
+  kayitBtn.TextSettings.Font.Size = 20;
+  kayitBtn.TextSettings.FontColor = clAlphaColor.clHexToColor('#8a067c');
+  kayitBtn.Height = 50;
+  kayitBtn.Width = 100;
+  kayitBtn.Align = alBottom;
+  kayitBtn.Margins.Left = 50;
+  kayitBtn.Margins.Right = 50;
+  kayitBtn.Margins.Top = 10;
+  kayitBtn.Margins.Bottom = 20;
+  Form1.AddNewEvent(kayitBtn,tbeOnClick,'KayitUnit');
+ 
+  girisBtn = Form1.AddNewButton(Panel,'girisBtn','Giriş Yap');
+  girisBtn.StyledSettings = ssFamily;
+  girisBtn.TextSettings.Font.Size = 20;
+  girisBtn.TextSettings.FontColor = clAlphaColor.clHexToColor('#8a067c');
+  girisBtn.Height = 50;
+  girisBtn.Width = 100;
+  girisBtn.Align = alBottom;
+  girisBtn.Margins.Left = 50;
+  girisBtn.Margins.Right = 50;
+  girisBtn.Margins.Top = 10;
+  girisBtn.Margins.Bottom = 10;
+  Form1.AddNewEvent(girisBtn,tbeOnClick,'AnaSayfaUnit');
+
+  GirisYapTitle= Form1.AddNewLabel(Panel,'GirisYapTitle','∼ Giriş Yap ∼');
+  GirisYapTitle.Align=alMostTop;
+  GirisYapTitle.Height =100;
+  GirisYapTitle.Margins.Left=80;
+  GirisYapTitle.StyledSettings = ssFamily;
+  GirisYapTitle.TextSettings.Font.Size= 32;
+
+  layoutList2 = Form1.AddNewLayout(Panel,'layoutList2');
+  layoutList2.Align = alTop;
+  layoutList2.Height = 60;
+  layoutList2.Width = 340;
+ 
+  sifreLabel = Form1.AddNewLabel(layoutList2,'sifreLabel','Şifre : ');
+  sifreLabel.Align = alMostLeft;
+  sifreLabel.Width = 140;
+  sifreLabel.Margins.Left = 20;
+  sifreLabel.Margins.Top = 20;
+
+  sifreGirEdit = Form1.AddNewEdit(layoutList2,'sifreGirEdit',' Şifre Giriniz');
+  sifreGirEdit.Align = alLeft;
+  sifreGirEdit.Width = 140;
+  sifreGirEdit.Margins.Top=20;
+ 
+  layoutList1 = Form1.AddNewLayout(Panel,'layoutList1');
+  layoutList1.Align = alTop;
+  layoutList1.Margins.Top = 10;
+  layoutList1.Height = 25;
+  layoutList1.Width = 340;
+ 
+  adSoyadLabel = Form1.AddNewLabel(layoutList1,'adSoyadLabel','Ad Soyad:');
+  adSoyadLabel.Align = alMostLeft;
+  adSoyadLabel.Width = 140;
+  adSoyadLabel.Margins.Left = 20;
+
+  adSoyadEdit = Form1.AddNewEdit(layoutList1,'adSoyadEdit',' Ad Soyad Giriniz');
+  adSoyadEdit.Align = alLeft;
+  adSoyadEdit.Width = 140;
+
+ 
+Form1.Run;
+}

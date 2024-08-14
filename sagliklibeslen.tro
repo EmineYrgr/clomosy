@@ -1,0 +1,90 @@
+var
+Form1:TclForm;
+Panel1 : TclPanel;
+ProButton1, ProButton2, BtnKisisel: TclProButton;
+proLabel1, proLabel2: TClProLabel;
+saglikliBeslenImg, meyvesuImg  : TclImage;
+Layout1 : TclLayout;
+PListView : TClProListView;
+
+ void KisiselUnit
+ {
+   Clomosy.RunUnit('Kisisel');
+ }
+ void AnaSayfaUnit
+{
+Clomosy.RunUnit('AnaSayfa');
+}
+void takvimUnit
+{
+Clomosy.RunUnit('takvim');
+}
+ void sagliklibeslenUnit
+{
+Clomosy.RunUnit('sagliklibeslen');
+}
+{
+  
+Form1 = TclForm.Create(Self);
+TclButton(Form1.clFindComponent('BtnFormMenu')).Visible = True;
+TclButton(Form1.clFindComponent('BtnGoBack')).Visible = True;
+Form1.clSetCaption('SPOR SALONU ABONE TAKİP UYGULAMASI');
+
+Layout1 = Form1.AddNewLayout(Form1,'Layout1');
+
+Panel1=Form1.AddNewPanel(Form1,'Panel1','');
+Panel1.Height = 125;
+Panel1.Width = 200;
+Panel1.Align=alBottom;
+
+ProButton1 = Form1.AddNewProButton(Panel1,'ProButton1','');
+ProButton1.Align = 50;
+ProButton1.Height = 125;
+ProButton1.Width = 125;
+ProButton1.Align = alLeft;
+clComponent.SetupComponent(ProButton1,'{
+"TextColor":"#8338ec","RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(ProButton1,'https://r.resimlink.com/IBZMCybm.png');
+ 
+ProButton2 = Form1.AddNewProButton(Panel1,'ProButton2','');
+ProButton2.Height = 125;
+ProButton2.Width = 125;
+ProButton2.Align = alCenter;
+clComponent.SetupComponent(ProButton2,'{
+"TextColor":"#8338ec","RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(ProButton2,'https://r.resimlink.com/5anqmZ36.png');
+Form1.AddNewEvent(ProButton2,tbeOnClick,'takvimUnit');
+
+BtnKisisel = Form1.AddNewProButton(Panel1,'BtnKisisel','');
+BtnKisisel.Align = 50;
+BtnKisisel.Height = 125;
+BtnKisisel.Width = 125;
+BtnKisisel.Align = alRight;
+clComponent.SetupComponent(BtnKisisel,'{
+"TextColor":"#8338ec","RoundHeight":60,"RoundWidth":60}');
+Form1.SetImage(BtnKisisel,'https://r.resimlink.com/uVfgY-vta4M.png');
+Form1.AddNewEvent(BtnKisisel,tbeOnClick,'KisiselUnit')
+
+proLabel1 = Form1.AddNewProLabel(Layout1,'proLabel1','Lezzetli ve Düşük Kalorili Yemek Seçenekleri');
+clComponent.SetupComponent(proLabel1,'{
+"Align" : "left",
+"Width" :300, "Height":50,
+"TextColor":"#03071e","TextSize":14,
+"TextVerticalAlign":"top",
+"TextHorizontalAlign":"alCenter","TextBold":"yes"}');
+ 
+ saglikliBeslenImg = Form1.AddNewImage(Form1,'saglikliBeslenImg');
+Form1.setImage(saglikliBeslenImg,'https://r.resimlink.com/4Nn8c9KC70HA.jpg');
+saglikliBeslenImg.Height = 250;
+saglikliBeslenImg.Width = 300;
+saglikliBeslenImg.Align=alTop;
+
+meyvesuImg = Form1.AddNewImage(Form1,'meyvesuImg');
+Form1.setImage(meyvesuImg,'https://r.resimlink.com/LQBW1gZ.jpg');
+meyvesuImg.Height = 250;
+meyvesuImg.Width = 300;
+meyvesuImg.Align=alCenter;
+
+Form1.Run;
+
+}
